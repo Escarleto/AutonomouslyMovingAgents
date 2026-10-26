@@ -122,7 +122,7 @@ public class Bot : MonoBehaviour
         float lookAngle = Vector3.Angle(transform.forward, raytoTarget);
         if (lookAngle < 60 && Physics.Raycast(transform.position, raytoTarget, out raycastInfo))
         {
-            if(raycastInfo.transform.gameObject.tag == "cop")
+            if (raycastInfo.transform.gameObject.tag == "cop")
                 return true;
         }
         return false;
@@ -133,9 +133,7 @@ public class Bot : MonoBehaviour
         Vector3 rayToTarget = transform.position - target.transform.position;
         float lookAngle = Vector3.Angle(target.transform.forward, rayToTarget);
 
-        if (lookAngle < 60)
-            return true;
-        return false;
+        return lookAngle < 60;
     }
 
     bool coolDown = false;
@@ -144,12 +142,19 @@ public class Bot : MonoBehaviour
         coolDown = false;
     }
 
+    bool TargetInRange()
+    {   
+        return Vector3.Distance(transform.position, target.transform.position) < 10;
+    }
+
     void Update()
     {
         if (coolDown || !target)
             return;
 
-        if (CanSeeTarget() && CanSeeMe())
+        if (!TargetInRange())
+            Wander();
+        else if (CanSeeTarget() && CanSeeMe())
         {
             CleverHide();
             coolDown = true;
