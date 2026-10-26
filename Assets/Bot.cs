@@ -115,9 +115,24 @@ public class Bot : MonoBehaviour
         Seek(info.point + chosenDir.normalized * 2);
     }
 
+    bool CanSeeTarget()
+    {
+        if(!target)
+            return false;
+
+        RaycastHit raycastInfo;
+        Vector3 raytoTarget = target.transform.position - transform.position;
+        if (Physics.Raycast(transform.position, raytoTarget, out raycastInfo))
+        {
+            if(raycastInfo.transform.gameObject.tag == "cop")
+                return true;
+        }
+        return false;
+    }
+
     void Update()
     {
-        if (target != null)
+        if (CanSeeTarget())
             Hide();
     }
 }
